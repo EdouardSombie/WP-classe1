@@ -13,6 +13,12 @@
 				<li>
 					<a href="#"><?= getIcon('facebook'); ?></a>
 				</li>
+				<li>
+					<a href="#"><?= getIcon('google'); ?></a>
+				</li>
+				<li>
+					<a href="#"><?= getIcon('linkedin'); ?></a>
+				</li>
 			</ul>
 		</nav>
 	</footer>
