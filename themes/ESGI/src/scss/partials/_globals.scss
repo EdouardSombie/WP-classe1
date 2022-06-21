@@ -46,14 +46,32 @@
 	font-family: $font2;
 }
 
-@mixin social-menu{
-	list-style: none;
+@mixin reset-list{
 	margin: 0;
 	padding: 0;
+	list-style: none;
+}
+
+@mixin social-menu{
+	@include reset-list;
 	display: flex;
 	align-items: center;
-	a{
-		margin: 0 rem(12);
+	gap: rem(25);
+	a{	
+		svg{
+			height: rem(18);
+			path{
+				fill: var(--text-color);
+				transition: fill 0.3s;
+			}
+		}
+		&:hover{
+			svg{
+				path{
+					fill: var(--main-color);
+				}
+			}
+		}
 	}
 }
 
@@ -61,15 +79,20 @@ $text-color: #000;
 $main-color: #3F51B5;
 $white: #FFF;
 $grey: #555;
+$lightgrey: #AAA;
 
 
 html{
 	--text-color: #{$text-color};
 	--main-color: #{$main-color};
 	--grey: #{$grey};
+	--light-grey: #{$lightgrey};
 	font-family: $font1;
 }
 
+img{
+	max-width: 100%;
+}
 
 figure{
 	margin: 0;
@@ -83,6 +106,60 @@ figure{
 	@include text1;
 }
 
+
 .page-content, .post-content{
-	@include text4;
+	@include text5;
+	a{
+		color: var(--main-color);
+		text-decoration: none;
+		&:hover{
+			text-decoration: underline;
+		}
+	}
+}
+
+.single-post{
+	header{
+		img{
+			object-fit: cover;
+			object-position: center;
+			border-radius: 800px;
+			width: rem(32);
+			height: rem(32);
+			margin-right: rem(10);
+		}
+		.post-meta{
+			font-family: $font2;
+			font-size: rem(13);
+			line-height: rem(21);
+			letter-spacing: 0.05em;
+			text-align: center;
+			margin-bottom: rem(34);
+			time{
+				margin-left: rem(42);
+			}
+		}
+	}
+	.post-image{
+		margin-bottom: rem(34);
+		img{
+			width: 100%;
+			max-height: rem(300);
+			object-fit: cover;
+			object-position: center;
+		}
+	}
+}
+
+.social-block{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: rem(32) 0;
+	h1{
+		@include text4;
+	}
+	ul{
+		@include social-menu;
+	}
 }

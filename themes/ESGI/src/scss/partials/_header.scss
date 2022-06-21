@@ -9,7 +9,7 @@
 		display: flex;
 		justify-content: center;
 		li{
-			&.current-menu-item, &:hover{
+			&.current-menu-item, &.current_page_parent, &:hover{
 				a{
 					background-color: var(--main-color);
 					color: $white;
