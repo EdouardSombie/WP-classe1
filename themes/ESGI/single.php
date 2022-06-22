@@ -42,6 +42,13 @@
 					</footer>
 				</article>
 			</div>
+
+			<?php
+			if(get_theme_mod('has_sidebar', false)){ ?>
+				<div class="col-md-2 offset-md-1">
+					<?php get_sidebar(); ?>
+				</div>
+			<?php } ?>
 		</div>
 	</div>
 </main>

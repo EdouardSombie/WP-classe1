@@ -80,15 +80,27 @@ $main-color: #3F51B5;
 $white: #FFF;
 $grey: #555;
 $lightgrey: #AAA;
-
+$black: #000;
 
 html{
 	--text-color: #{$text-color};
 	--main-color: #{$main-color};
 	--grey: #{$grey};
 	--light-grey: #{$lightgrey};
+	--bg-color: #{$white};
 	font-family: $font1;
 }
+
+body{
+	background-color: var(--bg-color);
+	color: var(--text-color);
+	&.dark{
+		--text-color: #{$white};
+		--bg-color: #{$black};
+	}
+}
+
+
 
 img{
 	max-width: 100%;
