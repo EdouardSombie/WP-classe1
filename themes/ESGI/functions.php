@@ -22,6 +22,12 @@ add_action( 'after_setup_theme', 'registerMenus', 0 );
 // Mettre les assets css en file d'attente
 function add_theme_css_and_js(){
 	wp_enqueue_style('main-css', get_stylesheet_uri());
+	wp_enqueue_script('main-js', get_template_directory_uri() . '/assets/js/main.js');
+	// Injection d'une variable dans le js
+	$variables = [
+		'ajaxURL' => admin_url('admin-ajax.php')
+	];
+	wp_localize_script('main-js', 'esgi', $variables);
 }
 add_action('wp_enqueue_scripts', 'add_theme_css_and_js');
 
@@ -153,5 +159,19 @@ function esgi_register_widget(){
 	    'after_title' => '</h3>',
 	  ]
 	);
+}
+
+
+// ROUTES AJAX (hooks wp_ajax_XXX, wp_ajax_nopriv_XXX)
+add_action( 'wp_ajax_load_posts', 'esgi_ajax_load_posts' );
+add_action( 'wp_ajax_nopriv_load_posts', 'esgi_ajax_load_posts' );
+
+function esgi_ajax_load_posts(){
+	$paged = $_POST['page'];
+	// Mise en buffer
+	ob_start();
+	include('template-parts/post-list.php');
+	echo ob_get_clean();
+	wp_die();
 }
 

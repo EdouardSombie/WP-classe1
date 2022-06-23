@@ -10,6 +10,7 @@
 			border: solid thin var(--light-grey);
 		}
 		[type="submit"]{
+			color: var(--text-color);
 			border: none;
 			background-color: transparent;
 			transition: color 0.3s;

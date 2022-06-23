@@ -1,10 +1,13 @@
 <div class="post-list-wrapper">
 	<?php
-	$paged = (get_query_var('paged')) ? absint( get_query_var( 'paged' ) ) : 1;
+	if(!isset($paged)){
+		$paged = (get_query_var('paged')) ? absint( get_query_var( 'paged' ) ) : 1;
+	}
+	
 
 	$args = [
 		'post_type' => 'post',
-		'posts_per_page' => 2,
+		'posts_per_page' => get_option( 'posts_per_page' ),
 		'post_status' => 'publish',
 		'paged' => $paged
 	];
@@ -15,6 +18,7 @@
 		echo '<ul class="post-list">';
 		while($the_query->have_posts()){
 			$the_query->the_post();
+			$post = get_post();
 			echo '<li><a href="' . get_permalink($post->ID) . '">';
 			echo '<article>';
 			echo '<h1>' . $post->post_title . '</h1>';
@@ -25,6 +29,7 @@
 	}
 	echo '<div class="post-list-pagination">';
 	echo paginate_links([
+		'base' => get_permalink(get_option('page_for_posts')) . '%_%', 
 		'total' => $the_query->max_num_pages,
 		'current' => $paged
 	]);
