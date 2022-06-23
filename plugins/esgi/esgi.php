@@ -72,4 +72,60 @@ function esgi_custom_post_type() {
 add_action('init', 'esgi_custom_post_type');
 
 
+// Ajout d'un template pour le type single project et la taxonomie skills
+function esgi_custom_post_template($template){
+	//var_dump($template);
+	if(is_single() && get_query_var('post_type') == 'esgi_project'){
+		// Charger le template à partir du module
+		$templates = [
+            'single-esgi_project.php',
+            'esgi/templates/single-esgi_project.php'
+        ];
+        $template = locate_template($templates);
+        if (!$template) {
+            $template = __DIR__ . '/templates/single-esgi_project.php';
+        }
+	}
+
+	if(is_tax('skills')){
+    	$templates = [
+            'taxonomy-skills.php',
+            'esgi/templates/taxonomy-skills.php'
+        ];
+        $template = locate_template($templates);
+        if (!$template) {
+            $template = __DIR__ . '/templates/taxonomy-skills.php';
+        }
+    }
+
+
+
+	return $template;
+}
+
+add_filter('template_include', 'esgi_custom_post_template', 99);
+
+
+
+// SHORTCODE
+add_action( 'init', 'esgi_add_shortcode' );
+function esgi_add_shortcode() {
+    add_shortcode( 'skills-list', 'esgi_skills_list' );
+}
+
+function esgi_skills_list($att){
+	$terms = get_terms('skills');
+	$output = '';
+	$title = isset($att['title']) ? $att['title'] : 'Titre par défaut';
+	if(!empty($terms)){
+		$output .= '<h2>' . $title . '</h2>';
+		$output .= '<ul>';
+		foreach($terms as $term){
+			$output .= '<li><a href="' . get_term_link($term) . '">' . $term->name . '</a></li>';
+		}
+		$output .= '</ul>';
+	}
+
+	return $output;
+}
 
