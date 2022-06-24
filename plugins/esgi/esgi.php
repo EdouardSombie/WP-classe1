@@ -98,8 +98,6 @@ function esgi_custom_post_template($template){
         }
     }
 
-
-
 	return $template;
 }
 
@@ -128,4 +126,123 @@ function esgi_skills_list($att){
 
 	return $output;
 }
+
+
+// WIDGET
+
+class Skills_list_widget extends WP_Widget {
+ 
+    /**
+     * Register widget with WordPress.
+     */
+    public function __construct() {
+        parent::__construct(
+            'skills_list', // Base ID
+            'Skills List', // Name
+            array( 'description' => __( 'Affiche une liste de skills', 'esgi' ), ) // Args
+        );
+    }
+ 
+    /**
+     * Front-end display of widget.
+     *
+     * @see WP_Widget::widget()
+     *
+     * @param array $args     Widget arguments.
+     * @param array $instance Saved values from database.
+     */
+    public function widget( $args, $instance ) {
+        extract( $args );
+        $title = apply_filters( 'widget_title', $instance['title'] );
+ 
+        echo $before_widget;
+        if ( ! empty( $title ) ) {
+            echo $before_title . $title . $after_title;
+        }
+        echo $this->getSkillsList();
+        echo $after_widget;
+    }
+ 
+    /**
+     * Back-end widget form.
+     *
+     * @see WP_Widget::form()
+     *
+     * @param array $instance Previously saved values from database.
+     */
+    public function form( $instance ) {
+        if ( isset( $instance[ 'title' ] ) ) {
+            $title = $instance[ 'title' ];
+        }
+        else {
+            $title = __( 'New title', 'ESGI' );
+        }
+        ?>
+        <p>
+            <label for="<?php echo $this->get_field_name( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
+            <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+         </p>
+    <?php
+    }
+ 
+    /**
+     * Sanitize widget form values as they are saved.
+     *
+     * @see WP_Widget::update()
+     *
+     * @param array $new_instance Values just sent to be saved.
+     * @param array $old_instance Previously saved values from database.
+     *
+     * @return array Updated safe values to be saved.
+     */
+    public function update( $new_instance, $old_instance ) {
+        $instance = array();
+        $instance['title'] = ( !empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+ 
+        return $instance;
+    }
+
+    public function getSkillsList(){
+    	$terms = get_terms('skills');
+		$output = '';
+		if(!empty($terms)){
+			$output .= '<ul>';
+			foreach($terms as $term){
+				$output .= '<li><a href="' . get_term_link($term) . '">' . $term->name . '</a></li>';
+			}
+			$output .= '</ul>';
+		}
+		return $output;
+    }
+
+}
+
+
+// Register Skills_list_widget widget
+add_action( 'widgets_init', 'register_esgi_widgets' );
+function register_esgi_widgets() { 
+    register_widget( 'Skills_list_widget' ); 
+}
+
+
+// Internationnaliser le theme
+
+add_action( 'init', 'esgi_load_textdomain' );
+function esgi_load_textdomain() {
+	load_plugin_textdomain( 'ESGI', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' ); 
+}
+
+add_filter( 'load_textdomain_mofile', 'esgi_load_textdomain_mo', 10, 2 );
+function esgi_load_textdomain_mo( $mofile, $domain ) {
+    if ( 'ESGI' === $domain && false !== strpos( $mofile, WP_LANG_DIR . '/plugins/' ) ) {
+        $locale = apply_filters( 'plugin_locale', determine_locale(), $domain );
+        $mofile = WP_PLUGIN_DIR . '/' . dirname( plugin_basename( __FILE__ ) ) . '/languages/' . $domain . '-' . $locale . '.mo';
+    }
+    return $mofile;
+}
+
+
+
+
+
 
